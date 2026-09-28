@@ -15,7 +15,7 @@ export const site = {
 export const sections: Section[] = [
   { slug: "work", title: "Work", blurb: "Projects and career highlights" },
   { slug: "ai", title: "AI", blurb: "What I'm building and thinking about in AI" },
-  { slug: "learning", title: "Learning", blurb: "Courses and what stuck" },
+  { slug: "learning", title: "Learning", blurb: "What I'm learning right now, and what stuck" },
   { slug: "leisure", title: "Leisure", blurb: "Books, movies and travel" },
   { slug: "canvas", title: "Canvas", blurb: "Paintings, mostly acrylic" },
   { slug: "movement", title: "Movement", blurb: "Dance and fitness" },

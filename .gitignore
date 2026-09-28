@@ -55,3 +55,6 @@ id_ed25519*
 secrets/
 service-account*.json
 .npmrc
+
+# ...except site content, which is markdown by design
+!content/**/*.md

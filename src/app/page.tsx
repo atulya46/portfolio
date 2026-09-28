@@ -1,4 +1,5 @@
-import { sections, site } from "@/lib/site";
+import Link from "next/link";
+import { sectionHref, sections, site } from "@/lib/site";
 
 export default function Home() {
   return (
@@ -13,12 +14,13 @@ export default function Home() {
       <ul className="flex flex-wrap gap-3">
         {sections.map((s) => (
           <li key={s.slug}>
-            <span
-              title={`${s.blurb} (coming soon)`}
-              className="inline-block rounded-full border border-accent/40 px-4 py-2 text-sm text-foreground"
+            <Link
+              href={sectionHref(s.slug)}
+              title={s.blurb}
+              className="inline-block rounded-full border border-accent/40 px-4 py-2 text-sm text-foreground transition hover:border-accent hover:bg-accent hover:text-background"
             >
               {s.title}
-            </span>
+            </Link>
           </li>
         ))}
       </ul>
