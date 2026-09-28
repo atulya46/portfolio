@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Warm placeholder palette. The real visual identity comes in milestone 3. */
+:root {
+  --background: #fbf4ea;
+  --foreground: #3b2a20;
+  --accent: #d9622b;
+  --muted: #8a6f5c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
