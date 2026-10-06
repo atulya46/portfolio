@@ -67,6 +67,7 @@ body {
   text-wrap: balance;
 }
 
+@layer components {
 /* ---------- buttons (guide: primary filled rust, secondary outlined) ---------- */
 .btn {
   display: inline-flex;
@@ -98,6 +99,7 @@ body {
   background: var(--paper);
   color: var(--red);
 }
+}
 
 /* ---------- link underline that draws in on hover; thicker when current ---------- */
 .scribble {
@@ -126,8 +128,7 @@ a:focus-visible .scribble {
   align-items: center;
   text-align: center;
   gap: 1.6rem;
-  padding: 1rem 1.25rem 3.5rem;
-  min-height: min(82vh, 820px);
+  padding: 0.5rem 1.25rem 2.5rem;
   justify-content: center;
 }
 /* The circle holds a looping image. The name sits in front and overlaps its lower edge, as in the guide. */
@@ -167,26 +168,6 @@ a:focus-visible .scribble {
   font-size: clamp(0.72rem, 1.1vw, 0.95rem);
   letter-spacing: 0.16em;
   line-height: 2;
-}
-
-/* ---------- ticker ---------- */
-.ticker {
-  overflow: hidden;
-  background: var(--ink);
-  color: var(--paper);
-}
-.ticker-track {
-  display: flex;
-  width: max-content;
-  animation: ticker 48s linear infinite;
-}
-.ticker:hover .ticker-track {
-  animation-play-state: paused;
-}
-@keyframes ticker {
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 /* ---------- surfaces ---------- */

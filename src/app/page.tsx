@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Scribble } from "@/components/Scribble";
-import { countLabel, nowLines } from "@/lib/content/digest";
+import { countLabel } from "@/lib/content/digest";
 import { loadEntries } from "@/lib/content/load";
 import { sectionHref, sectionsOn, type Side } from "@/lib/site";
 
@@ -14,7 +14,6 @@ export default function Home() {
   const entries = loadEntries();
   const painting = entries.find((e) => e.type === "painting");
   const book = entries.find((e) => e.type === "book" && e.quotes.length > 0);
-  const now = nowLines(entries);
 
   return (
     <main className="flex flex-col">
@@ -43,26 +42,8 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Ticker of what's on the desk, straight from the entries. */}
-      {now.length > 0 && (
-        <div className="ticker" aria-hidden="true">
-          <div className="ticker-track">
-            {[0, 1].map((copy) => (
-              <div key={copy} className="flex">
-                {[...now, ...now, ...now].map((line, i) => (
-                  <span key={i} className="label flex items-center gap-4 px-4 py-3">
-                    {line.verb}: {line.title}
-                    <span className="text-taupe">&#10022;</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* The index, split into the two halves of the day. */}
-      <section id="index" className="mx-auto grid w-full max-w-6xl gap-16 px-5 py-20 sm:px-8 md:grid-cols-2 md:gap-12">
+      <section id="index" className="mx-auto grid w-full max-w-6xl gap-16 px-5 py-14 sm:px-8 md:grid-cols-2 md:gap-12">
         {sides.map(({ side, title, hours }) => (
           <div key={side} className="flex flex-col gap-6">
             <div className="flex flex-col gap-2 border-b border-ink/30 pb-4">
