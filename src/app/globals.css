@@ -162,7 +162,10 @@ a:focus-visible .scribble {
   text-shadow: 0 2px 28px rgba(46, 36, 29, 0.35);
 }
 .hero-tagline {
-  max-width: 34rem;
+  /* In the guide the tagline spans about 56% of the hero's width, a touch larger than nav text. */
+  max-width: 36rem;
+  font-size: clamp(0.72rem, 1.1vw, 0.95rem);
+  letter-spacing: 0.16em;
   line-height: 2;
 }
 
