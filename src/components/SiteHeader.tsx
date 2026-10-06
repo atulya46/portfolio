@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { flags } from "@/lib/flags";
 import { aboutPage, contact, sectionHref, sections } from "@/lib/site";
 import { Scribble } from "./Scribble";
@@ -16,12 +17,27 @@ const links = [
 export function SiteHeader() {
   const pathname = usePathname();
   const current = pathname.split("/")[1];
-  const onHero = pathname === "/" || (flags.sectionRedesign && pathname === "/about");
+  const ref = useRef<HTMLElement>(null);
+
+  // Publish the header height so the homepage hero can fill exactly the rest of the screen.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const set = () => document.documentElement.style.setProperty("--header-h", `${el.offsetHeight}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // "home": transparent, floating over the photo. true: solid rust (About). false: ivory pages.
+  const onHero = pathname === "/" ? "home" : flags.sectionRedesign && pathname === "/about";
 
   return (
     <header
-      className={`relative z-10 flex items-center justify-between gap-6 px-5 py-6 sm:px-10 ${
-        onHero ? "bg-red text-paper" : "text-ink"
+      ref={ref}
+      className={`z-10 flex items-center justify-between gap-6 px-5 py-6 sm:px-10 ${
+        onHero === "home" ? "absolute inset-x-0 top-0 text-paper" : onHero ? "relative bg-red text-paper" : "relative text-ink"
       }`}
     >
       <Link href="/" className="display text-2xl tracking-wide" aria-label="Atulya Arya, home">

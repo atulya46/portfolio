@@ -28,18 +28,18 @@ export default async function EntryPage({ params }: PageProps<"/[section]/[slug]
   const number = padNumber(entryNumber(entry, loadEntries()));
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-12 px-5 pb-24 pt-8 sm:px-8">
+    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-5 pb-20 pt-6 sm:px-8">
       <Link href={`/${section}`} className="label self-start text-ink-soft hover:text-red-deep">
         &larr; {sectionTitle}
       </Link>
 
       {/* Title block with the entry's number set large, like a project sheet. */}
-      <header className="grid items-end gap-6 border-b border-ink/30 pb-8 md:grid-cols-[1fr_auto]">
+      <header className="grid items-end gap-6 border-b border-ink/30 pb-5 md:grid-cols-[1fr_auto]">
         <div className="flex flex-col gap-4">
           <span className="label text-ink-soft">
             {typeLabel(entry)} · {formatDate(entry.date)}
           </span>
-          <h1 className="display text-[clamp(3.2rem,8vw,6.5rem)] text-red">{entry.title}</h1>
+          <h1 className="display text-[clamp(2.2rem,5vw,3.8rem)] text-red">{entry.title}</h1>
           {sub && entry.type !== "painting" && <p className="text-ink-soft">{sub}</p>}
           {entry.type === "learning" && entry.topics.length > 0 && (
             <ul className="flex flex-wrap gap-2 pt-1">
@@ -51,7 +51,7 @@ export default async function EntryPage({ params }: PageProps<"/[section]/[slug]
             </ul>
           )}
         </div>
-        <span aria-hidden="true" className="display hidden text-[9rem] leading-none text-taupe md:block">
+        <span aria-hidden="true" className="display hidden text-[4.5rem] leading-none text-taupe md:block">
           {number}.
         </span>
       </header>

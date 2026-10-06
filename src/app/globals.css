@@ -101,73 +101,113 @@ body {
 }
 }
 
-/* ---------- link underline that draws in on hover; thicker when current ---------- */
+/* ---------- link underline: fades in under the words themselves, never across the text below ---------- */
 .scribble {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 0% 1px;
-  padding-bottom: 0.15em;
-  transition: background-size 0.4s cubic-bezier(0.6, 0, 0.3, 1);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.3s;
 }
 .scribble[data-on="true"],
 a:hover .scribble,
 a:focus-visible .scribble {
-  background-size: 100% 1px;
+  text-decoration-color: currentColor;
 }
 
-/* ---------- homepage hero (laptop-screen reference in the guide) ---------- */
+/* ---------- homepage hero: the laptop photo fills the first screen ---------- */
 .hero-shell {
-  margin-top: -1px; /* hides a hairline between the header and hero backgrounds */
+  position: relative;
+  display: flex;
+  min-height: 100svh; /* the rust fills the whole first screen */
   background: var(--red);
   color: var(--paper);
+  overflow: hidden;
+}
+/* The photo is multiplied onto the rust, so it keeps the site's colours instead of grey. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--red); /* the backdrop the photo multiplies onto (this box is its own stacking context) */
+}
+.hero-bg img {
+  object-fit: cover;
+  object-position: 28% 50%; /* keeps the laptop in frame; the drink falls off on narrow screens */
+  mix-blend-mode: multiply;
+  /* "Image generation" reveal, like a picture being drawn: the photo is revealed top to bottom
+     behind a soft edge while it sharpens from a blurry, washed-out first pass. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(var(--reveal) - 16%), transparent var(--reveal));
+  mask-image: linear-gradient(to bottom, #000 calc(var(--reveal) - 16%), transparent var(--reveal));
+  animation: reveal 4.8s cubic-bezier(0.45, 0.05, 0.25, 1) 0.3s both, sharpen 5.6s ease-out 0.3s both;
+}
+/* Darkens the centre a little so the name stays readable over the keyboard. */
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 55%, rgba(40, 14, 8, 0.55), rgba(40, 14, 8, 0.1) 70%);
+  animation: fade-in 2s 1.2s both;
+}
+@property --reveal {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 130%;
+}
+@keyframes reveal {
+  from {
+    --reveal: 0%;
+  }
+  to {
+    --reveal: 130%;
+  }
+}
+@keyframes sharpen {
+  from {
+    filter: blur(30px) contrast(0.7) saturate(0.4);
+    transform: scale(1.1);
+  }
+  60% {
+    filter: blur(10px) contrast(0.9);
+  }
+  to {
+    filter: blur(0) contrast(1);
+    transform: scale(1);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
 }
 .hero {
+  position: relative;
+  z-index: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   gap: 1.6rem;
-  padding: 0.5rem 1.25rem 2.5rem;
-  justify-content: center;
-}
-/* The circle holds a looping image. The name sits in front and overlaps its lower edge, as in the guide. */
-.hero-circle {
-  position: relative;
-  width: clamp(220px, 28vw, 330px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 3px solid var(--paper);
-  overflow: hidden;
-  margin-bottom: calc(clamp(220px, 28vw, 330px) * -0.2);
-}
-.hero-circle img {
-  object-fit: cover;
-  object-position: 50% 25%;
-  animation: drift 24s ease-in-out infinite alternate;
-}
-@keyframes drift {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.14) translateY(-3%);
-  }
+  padding: calc(var(--header-h, 5rem) + 1rem) 1.25rem 3rem;
 }
 .hero-name {
-  position: relative;
-  z-index: 1;
   font-size: clamp(3.3rem, 11.5vw, 10.5rem);
   letter-spacing: -0.02em;
   text-transform: uppercase;
-  text-shadow: 0 2px 28px rgba(46, 36, 29, 0.35);
+  text-shadow: 0 2px 28px rgba(46, 36, 29, 0.45);
+  animation: fade-in 1.2s 1.6s both;
 }
 .hero-tagline {
-  /* In the guide the tagline spans about 56% of the hero's width, a touch larger than nav text. */
   max-width: 36rem;
   font-size: clamp(0.72rem, 1.1vw, 0.95rem);
   letter-spacing: 0.16em;
   line-height: 2;
+  animation: fade-in 1.2s 2.1s both;
+}
+.hero .btn-circle {
+  animation: fade-in 1.2s 2.5s both;
 }
 
 /* ---------- surfaces ---------- */
@@ -244,7 +284,7 @@ a:focus-visible .scribble {
   background: var(--red);
   color: var(--paper);
   padding: 2rem 1.25rem 0;
-  min-height: min(78vh, 760px);
+  min-height: min(80vh, 720px);
   margin-block: -1px; /* hides hairlines against the header and footer */
 }
 .about-title {
@@ -253,8 +293,8 @@ a:focus-visible .scribble {
   /* Tone on tone: the title is a darker rust than the page, as in the reference. */
   color: var(--red-deep);
   text-transform: uppercase;
-  font-size: clamp(4.2rem, 15.5vw, 14.5rem);
-  line-height: 0.85;
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 0.9;
   padding-left: clamp(0rem, 3vw, 3rem);
   animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -296,7 +336,9 @@ a:focus-visible .scribble {
   height: clamp(18rem, 60vw, 30rem);
   width: auto;
   margin-top: -5rem;
-  filter: grayscale(1);
+  /* Die-cut sticker outline: stacked white drop-shadows in eight directions, then a soft shadow. */
+  --o: clamp(3px, 0.45vw, 6px);
+  filter: drop-shadow(var(--o) 0 0 #fffdf8) drop-shadow(calc(var(--o) * -1) 0 0 #fffdf8) drop-shadow(0 var(--o) 0 #fffdf8) drop-shadow(0 calc(var(--o) * -1) 0 #fffdf8) drop-shadow(var(--o) var(--o) 0 #fffdf8) drop-shadow(calc(var(--o) * -1) calc(var(--o) * -1) 0 #fffdf8) drop-shadow(var(--o) calc(var(--o) * -1) 0 #fffdf8) drop-shadow(calc(var(--o) * -1) var(--o) 0 #fffdf8) drop-shadow(0 14px 18px rgba(0, 0, 0, 0.35));
   animation: rise 1s 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 @media (min-width: 900px) {
@@ -583,20 +625,16 @@ a.cz-piece:focus-visible {
   }
 }
 
-/* ---------- Studio: vintage newspaper ---------- */
+/* ---------- Studio: literary newsletter ---------- */
 .gazette {
   position: relative;
-  padding: clamp(1.2rem, 3vw, 2.6rem);
-  border-radius: 1.4rem;
-  color: #2a1f17;
-  /* Crumpled kraft paper: lit turbulence multiplied over a warm taupe, plus fine grain
-     and a darker edge, so it reads as an old folded sheet. Colours stay in our palette. */
-  background-color: color-mix(in srgb, var(--taupe) 60%, var(--paper-deep));
-  background-image: radial-gradient(ellipse at center, transparent 55%, rgba(110, 70, 36, 0.3) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.017' numOctaves='4' seed='7' result='n'/%3E%3CfeDiffuseLighting in='n' lighting-color='%23ffe9c9' surfaceScale='2.6'%3E%3CfeDistantLight azimuth='40' elevation='58'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.16 0 0 0 0 0.08 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-blend-mode: normal, multiply, normal;
-  box-shadow: 0 26px 50px -30px rgba(46, 36, 29, 0.7), inset 0 0 0 1px rgba(46, 36, 29, 0.12);
+  padding: clamp(1.1rem, 2.6vw, 2.2rem);
+  border-radius: 0.6rem;
+  color: var(--ink);
+  /* Clean newsprint: warm off-white with a whisper of grain. */
+  background-color: var(--paper-deep);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.16 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  box-shadow: 0 22px 40px -28px rgba(46, 36, 29, 0.6), inset 0 0 0 1px rgba(46, 36, 29, 0.14);
 }
 .gz-masthead {
   display: flex;
@@ -604,8 +642,8 @@ a.cz-piece:focus-visible {
   align-items: center;
   gap: 0.7rem;
   text-align: center;
-  padding-bottom: 1.6rem;
-  border-bottom: 4px double #2a1f17;
+  padding-bottom: 1.1rem;
+  border-bottom: 3px double var(--ink);
 }
 .gz-dateline {
   display: flex;
@@ -613,15 +651,14 @@ a.cz-piece:focus-visible {
   justify-content: space-between;
   gap: 0.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #2a1f17;
+  border-bottom: 1px solid var(--ink);
   font-size: 0.62rem;
 }
 .gz-title {
-  font-size: clamp(3.4rem, 11vw, 8.5rem);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  line-height: 0.9;
-  color: #2a1f17;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--ink);
 }
 .gz-motto {
   font-family: var(--font-playfair), serif;
@@ -633,13 +670,13 @@ a.cz-piece:focus-visible {
   align-items: center;
   gap: 0.6rem;
   width: 100%;
-  color: #2a1f17;
+  color: var(--ink);
 }
 .gz-ornament i {
   flex: 1;
   height: 0;
-  border-top: 1px solid #2a1f17;
-  border-bottom: 1px solid #2a1f17;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
   padding-top: 2px;
 }
 .gz-ornament b {
@@ -649,7 +686,7 @@ a.cz-piece:focus-visible {
 .gz-cols {
   column-count: 1;
   column-gap: 2.4rem;
-  column-rule: 1px solid #2a1f17;
+  column-rule: 1px solid var(--ink);
   padding-top: 1.6rem;
 }
 @media (min-width: 640px) {
@@ -683,34 +720,36 @@ a.cz-piece:focus-visible {
   font-size: 0.62rem;
   color: var(--red-deep);
 }
+.gz-box {
+  /* Articles sit in a double-ruled box, like the template's "Subscribe" panel. */
+  border: 3px double var(--ink);
+  padding: 1rem 1.1rem 1.2rem;
+}
 .gz-headline {
   text-align: center;
   font-size: 1.7rem;
   line-height: 1.05;
-  text-transform: uppercase;
   text-wrap: balance;
 }
 .gz-photo {
   position: relative;
   display: block;
   padding: 0.35rem;
-  border: 1px solid #2a1f17;
+  border: 1px solid var(--ink);
   background: rgba(255, 253, 248, 0.35);
   overflow: hidden;
 }
-/* Old-print photograph: sepia and grainy until hovered, then true colour. */
+/* Muted print photograph; full colour on hover. */
 .gz-photo img {
   display: block;
   width: 100%;
   height: auto;
-  filter: sepia(0.85) contrast(1.08) saturate(0.7);
-  mix-blend-mode: multiply;
-  transition: filter 0.5s, transform 0.7s, mix-blend-mode 0.5s;
+  filter: grayscale(0.35) contrast(1.04);
+  transition: filter 0.5s, transform 0.7s;
 }
 .gz-link:hover .gz-photo img,
 .gz-link:focus-visible .gz-photo img {
   filter: none;
-  mix-blend-mode: normal;
   transform: scale(1.03);
 }
 .gz-caption {

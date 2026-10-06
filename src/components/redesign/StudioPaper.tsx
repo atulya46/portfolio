@@ -79,11 +79,11 @@ export function StudioPaper({ items, issue }: { items: PaperItem[]; issue: strin
     return (
       <article key={item.id} className="gz-story" style={delay}>
         {item.external ? (
-          <a href={item.href} target="_blank" rel="noopener noreferrer" className="gz-link">
+          <a href={item.href} target="_blank" rel="noopener noreferrer" className="gz-link gz-box">
             {body}
           </a>
         ) : (
-          <Link href={item.href} className="gz-link">
+          <Link href={item.href} className="gz-link gz-box">
             {body}
           </Link>
         )}

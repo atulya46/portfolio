@@ -12,24 +12,16 @@ const sides: { side: Side; title: string; hours: string }[] = [
 
 export default function Home() {
   const entries = loadEntries();
-  const painting = entries.find((e) => e.type === "painting");
 
   return (
     <main className="flex flex-col">
-      {/* Hero, from the style guide's laptop screen: a circle of the painting, the name
-          overlapping its lower edge, a one-line tagline, and an outlined "explore" button. */}
+      {/* Hero: the laptop photo fills the first screen and "develops" like a generated image;
+          the name and tagline fade in over it once the picture has mostly formed. */}
       <div className="hero-shell">
+        <div className="hero-bg" aria-hidden="true">
+          <Image src="/hero/laptop.jpg" alt="" fill priority sizes="100vw" />
+        </div>
         <section className="hero">
-          <div className="hero-circle">
-            {painting?.type === "painting" && (
-              <Image
-                src={painting.image}
-                alt={painting.alt}
-                fill
-                priority
-                sizes="330px" />
-            )}
-          </div>
           <h1 className="display hero-name">Atulya Arya</h1>
           <p className="label hero-tagline">
             I build things, get curious about unrelated things, and occasionally make something beautiful.

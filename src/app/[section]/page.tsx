@@ -37,14 +37,16 @@ export default async function SectionPage({ params }: PageProps<"/[section]">) {
   const isGallery = entries.length > 0 && entries.every((e) => e.type === "painting");
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-5 pb-24 pt-10 sm:px-8">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-5 pb-20 pt-6 sm:px-8">
       {!(flags.sectionRedesign && slug === "studio") && (
-              <header className="flex flex-col gap-5 border-b border-ink/30 pb-8">
+              <header className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-ink/30 pb-5">
+          <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+            <h1 className="display text-[clamp(2.4rem,5vw,3.6rem)] text-red">{section.title}</h1>
+            <p className="text-ink-soft">{section.blurb}</p>
+          </div>
           <span className="label text-ink-soft">
             {section.side === "day" ? "By day" : "By evening"} · {countLabel(entries.length)}
           </span>
-          <h1 className="display text-[clamp(4rem,12vw,9rem)] text-red">{section.title}</h1>
-          <p className="max-w-xl text-ink-soft">{section.blurb}.</p>
         </header>
       )}
 
