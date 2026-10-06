@@ -5,11 +5,23 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { pageOf, type Scrap, type ScrapKind } from "@/lib/content/board";
 
-// The Currently page as a scrapbook: every book, film, trip and workout is a paper scrap
-// that sticks onto the board as it scrolls into view (the Canva template's collage motion).
-// A dense board is easy to scan because of the filter chips and the "show more" button.
+// Currently as a scrapbook spread, after the Canva collage video: torn paper and graph
+// paper go down first, then photos, tickets and stickers drop onto the page one by one.
+// One spread holds SLOTS.length pieces; "turn the page" shows the next spread, so any
+// number of items stays tidy.
 
-const PAGE = 9;
+type Slot = { l: number; t: number; w: number; a: string; r: number; z: number; s: number };
+
+// Position (% of the board), width (% of board width), aspect ratio, tilt and stacking.
+const SLOTS: Slot[] = [
+  { l: 27, t: 9, w: 46, a: "5 / 4", r: -2, z: 5, s: 1.9 },
+  { l: 2, t: 3, w: 25, a: "1 / 1", r: -3, z: 3, s: 1 },
+  { l: 3, t: 47, w: 25, a: "4 / 5", r: 3, z: 3, s: 1 },
+  { l: 72, t: 3, w: 25, a: "4 / 5", r: 3, z: 3, s: 1 },
+  { l: 73, t: 51, w: 24, a: "1 / 1", r: -4, z: 3, s: 1 },
+  { l: 33, t: 63, w: 26, a: "4 / 3", r: 2, z: 6, s: 1 },
+  { l: 60, t: 71, w: 13, a: "1 / 1", r: -6, z: 7, s: 0.75 },
+];
 
 const filters: { id: "all" | ScrapKind; label: string }[] = [
   { id: "all", label: "Everything" },
@@ -19,118 +31,143 @@ const filters: { id: "all" | ScrapKind; label: string }[] = [
   { id: "movement", label: "Moving" },
 ];
 
-// Same item always tilts the same way, so the board doesn't reshuffle on every render.
-function tilt(index: number): number {
-  const angles = [-2.2, 1.6, -0.8, 2.4, -1.5, 0.9];
-  return angles[index % angles.length];
+const kindLabel: Record<ScrapKind, string> = { book: "Reading", movie: "Watching", trip: "Travelling", movement: "Moving" };
+
+// What a piece looks like depends on whether it has a picture and what it is.
+function pieceStyle(item: Scrap): "polaroid" | "sticker" | "note" | "ticket" | "badge" {
+  if (item.image) return item.kind === "trip" ? "polaroid" : "sticker";
+  if (item.kind === "movie") return "ticket";
+  if (item.kind === "movement") return "badge";
+  return "note";
 }
 
-function ScrapPiece({ item, index }: { item: Scrap; index: number }) {
-  const style = { "--r": `${tilt(index)}deg`, "--d": `${(index % 6) * 90}ms` } as CSSProperties;
-  const body = (
+function Piece({ item, slot, index }: { item: Scrap; slot: Slot; index: number }) {
+  const style = pieceStyle(item);
+  const css = {
+    left: `${slot.l}%`,
+    top: `${slot.t}%`,
+    width: `${slot.w}%`,
+    aspectRatio: slot.a,
+    zIndex: slot.z,
+    "--r": `${slot.r}deg`,
+    "--i": index,
+    "--s": slot.s,
+  } as CSSProperties;
+
+  const inner = (
     <>
-      {item.kind === "trip" && item.image && (
-        <Image
-          src={item.image}
-          alt={item.alt ?? item.title}
-          width={480}
-          height={600}
-          sizes="(max-width: 640px) 90vw, 30vw"
-          className="scrap-photo"
-        />
+      {item.image && (
+        <span className="cz-photo">
+          <Image
+            src={item.image}
+            alt={item.alt ?? item.title}
+            fill
+            sizes="(max-width: 720px) 50vw, 30vw"
+            className="object-cover"
+          />
+        </span>
       )}
-      <span className="label scrap-kind">{{ book: "Reading", movie: "Watching", trip: "Travelling", movement: "Moving" }[item.kind]}</span>
-      <span className="display scrap-title">{item.title}</span>
-      {item.meta && <span className="scrap-meta">{item.meta}</span>}
-      {item.note && <span className="scrap-note">&ldquo;{item.note}&rdquo;</span>}
-      {item.sample && <span className="scrap-sample label">sample</span>}
+      <span className="cz-text">
+        <span className="label cz-kind">
+          {kindLabel[item.kind]}
+          {item.sample ? " · sample" : ""}
+        </span>
+        <span className="display cz-title">{item.title}</span>
+        {item.meta && <span className="cz-meta">{item.meta}</span>}
+        {item.note && !item.image && <span className="cz-note-text">&ldquo;{item.note}&rdquo;</span>}
+      </span>
     </>
   );
 
-  const cls = `scrap scrap-${item.kind}`;
+  const className = `cz-piece cz-${style}`;
   return item.href ? (
-    <Link href={item.href} className={cls} style={style} data-scrap>
-      {body}
+    <Link href={item.href} className={className} style={css}>
+      {inner}
     </Link>
   ) : (
-    <div className={cls} style={style} data-scrap>
-      {body}
+    <div className={className} style={css}>
+      {inner}
     </div>
   );
 }
 
 export function CurrentlyBoard({ items }: { items: Scrap[] }) {
   const [filter, setFilter] = useState<"all" | ScrapKind>("all");
-  const [visible, setVisible] = useState(PAGE);
+  const [page, setPage] = useState(0);
   const boardRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => (filter === "all" ? items : items.filter((i) => i.kind === filter)), [items, filter]);
-  const { shown, remaining } = pageOf(filtered, visible);
+  const pages = Math.max(1, Math.ceil(filtered.length / SLOTS.length));
+  const { shown } = pageOf(filtered.slice(page * SLOTS.length), SLOTS.length);
 
-  // Scraps stay visible until JS is ready; then each one waits off the board and sticks
-  // on as it enters the viewport. Re-runs when the filter or page changes the scraps.
+  // The board waits (hidden) until it scrolls into view, then every piece drops in on its
+  // own delay. Nothing stays hidden if the observer is unavailable or never reports.
   useEffect(() => {
     const board = boardRef.current;
     if (!board) return;
-    board.dataset.armed = "true";
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const nodes = board.querySelectorAll<HTMLElement>("[data-scrap]:not([data-in])");
-    if (reduce) {
-      nodes.forEach((n) => n.setAttribute("data-in", "true"));
+    if (reduce || !("IntersectionObserver" in window)) {
+      board.dataset.in = "true";
       return;
     }
+    board.dataset.armed = "true";
     const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.setAttribute("data-in", "true");
-            io.unobserve(e.target);
-          }
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          board.dataset.in = "true";
+          io.disconnect();
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.2 },
     );
-    nodes.forEach((n) => io.observe(n));
-    // Safety net: if the observer never reports (some embedded browsers throttle it),
-    // show everything rather than leave scraps invisible.
-    const fallback = window.setTimeout(() => nodes.forEach((n) => n.setAttribute("data-in", "true")), 3000);
+    io.observe(board);
+    const fallback = window.setTimeout(() => (board.dataset.in = "true"), 3000);
     return () => {
       io.disconnect();
       window.clearTimeout(fallback);
     };
-  }, [shown.length, filter]);
+  }, [filter, page]);
 
   return (
-    <section className="flex flex-col gap-10">
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Filter the board">
-        {filters.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className="pill"
-            aria-pressed={filter === f.id}
-            data-active={filter === f.id}
-            onClick={() => {
-              setFilter(f.id);
-              setVisible(PAGE);
-            }}
-          >
-            {f.label}
-          </button>
-        ))}
+    <section className="flex flex-col gap-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter the scrapbook">
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              className="pill"
+              aria-pressed={filter === f.id}
+              onClick={() => {
+                setFilter(f.id);
+                setPage(0);
+              }}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        {pages > 1 && (
+          <div className="label flex items-center gap-3 text-ink-soft">
+            <button type="button" className="cz-turn" disabled={page === 0} onClick={() => setPage((p) => p - 1)} aria-label="Previous page">
+              &larr;
+            </button>
+            Page {page + 1} of {pages}
+            <button type="button" className="cz-turn" disabled={page >= pages - 1} onClick={() => setPage((p) => p + 1)} aria-label="Next page">
+              &rarr;
+            </button>
+          </div>
+        )}
       </div>
 
-      <div ref={boardRef} className="scrap-board" key={filter}>
+      <div ref={boardRef} className="collage" key={`${filter}-${page}`}>
+        {/* Backing paper that goes down first. */}
+        <span className="cz-sheet cz-sheet-torn" aria-hidden="true" />
+        <span className="cz-sheet cz-sheet-grid" aria-hidden="true" />
         {shown.map((item, i) => (
-          <ScrapPiece key={item.id} item={item} index={i} />
+          <Piece key={item.id} item={item} slot={SLOTS[i]} index={i} />
         ))}
       </div>
-
-      {remaining > 0 && (
-        <button type="button" className="btn label self-center" onClick={() => setVisible((v) => v + PAGE)}>
-          Show {Math.min(PAGE, remaining)} more ({remaining} left)
-        </button>
-      )}
     </section>
   );
 }

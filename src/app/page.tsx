@@ -13,7 +13,6 @@ const sides: { side: Side; title: string; hours: string }[] = [
 export default function Home() {
   const entries = loadEntries();
   const painting = entries.find((e) => e.type === "painting");
-  const book = entries.find((e) => e.type === "book" && e.quotes.length > 0);
 
   return (
     <main className="flex flex-col">
@@ -75,24 +74,6 @@ export default function Home() {
         ))}
       </section>
 
-      {/* One line from the bookshelf, taped to the page. */}
-      {book?.type === "book" && (
-        <section className="mx-auto w-full max-w-4xl px-5 pb-24 sm:px-8">
-          <figure className="taped px-7 pb-8 pt-10 sm:px-14 sm:pb-12 sm:pt-14">
-            <span aria-hidden className="display absolute -top-2 left-5 text-[7rem] leading-none text-taupe sm:left-8">
-              &ldquo;
-            </span>
-            <blockquote className="display text-3xl leading-[1.15] sm:text-5xl">{book.quotes[0]}</blockquote>
-            <figcaption className="label mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-ink-soft">
-              <span>Lines that stayed</span>
-              <span aria-hidden>·</span>
-              <Link href={`/${book.section}/${book.slug}`} className="text-ink underline underline-offset-4 hover:text-red-deep">
-                {book.title}, {book.author}
-              </Link>
-            </figcaption>
-          </figure>
-        </section>
-      )}
     </main>
   );
 }

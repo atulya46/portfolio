@@ -5,13 +5,13 @@ import type { PaperItem, Scrap } from "./board";
 // uses in the section page) once the real entries and images are in.
 
 export const sampleScraps: Scrap[] = [
-  { id: "s-book-1", kind: "book", title: "Sample book title", meta: "by Sample Author", note: "A line from the book would sit here.", sample: true },
+  { id: "s-book-1", kind: "book", title: "Sample book title", meta: "by Sample Author", image: "/samples/photo-5.svg", note: "A line from the book would sit here.", sample: true },
   { id: "s-trip-1", kind: "trip", title: "Sample trip", meta: "Somewhere lovely", image: "/samples/photo-1.svg", note: "Where the photo was taken.", sample: true },
   { id: "s-movie-1", kind: "movie", title: "Sample film", meta: "dir. Sample Director", note: "One-line take.", sample: true },
   { id: "s-move-1", kind: "movement", title: "Dance class", meta: "Tuesday", sample: true },
   { id: "s-trip-2", kind: "trip", title: "Another sample trip", meta: "Another place", image: "/samples/photo-2.svg", sample: true },
   { id: "s-book-2", kind: "book", title: "Another sample book", meta: "by Another Author", sample: true },
-  { id: "s-movie-2", kind: "movie", title: "Sample series", meta: "Season 1", note: "Binged it.", sample: true },
+  { id: "s-movie-2", kind: "movie", title: "Sample series", image: "/samples/photo-6.svg", meta: "Season 1", note: "Binged it.", sample: true },
   { id: "s-move-2", kind: "movement", title: "5 km run", meta: "Saturday", sample: true },
   { id: "s-trip-3", kind: "trip", title: "A third sample trip", meta: "A mountain somewhere", image: "/samples/photo-3.svg", sample: true },
   { id: "s-book-3", kind: "book", title: "Third sample book", meta: "by Third Author", note: "Another line.", sample: true },

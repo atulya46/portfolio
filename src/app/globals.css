@@ -329,252 +329,433 @@ a:focus-visible .scribble {
   }
 }
 
-/* ---------- Currently: scrapbook board ---------- */
+/* ---------- filter pills and page turners (Currently) ---------- */
+.pill {
+  cursor: pointer;
+}
 .pill[aria-pressed="true"] {
   background: var(--ink);
   color: var(--paper);
 }
-.pill {
-  cursor: pointer;
+.cz-turn {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  aspect-ratio: 1;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  color: var(--ink);
+  transition: background-color 0.2s, color 0.2s;
 }
-.scrap-board {
-  columns: 3 16rem;
-  column-gap: 1.75rem;
-}
-.scrap {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  break-inside: avoid;
-  margin-bottom: 1.75rem;
-  padding: 1.4rem 1.3rem 1.5rem;
-  background: var(--paper-deep);
-  transform: rotate(var(--r, 0deg));
-  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1), box-shadow 0.35s;
-  box-shadow: 0 14px 22px -18px rgba(46, 36, 29, 0.55);
-}
-a.scrap:hover,
-a.scrap:focus-visible {
-  transform: rotate(0deg) translateY(-6px);
-  box-shadow: 0 24px 30px -20px rgba(46, 36, 29, 0.6);
-}
-/* Armed by JS: scraps wait off the board, then stick on once scrolled into view. */
-.scrap-board[data-armed="true"] .scrap:not([data-in="true"]) {
-  opacity: 0;
-}
-.scrap[data-in="true"] {
-  animation: stick 0.8s var(--d, 0ms) cubic-bezier(0.2, 1.3, 0.4, 1) both;
-}
-@keyframes stick {
-  from {
-    opacity: 0;
-    transform: translateY(-36px) rotate(calc(var(--r, 0deg) + 7deg)) scale(1.12);
-  }
-}
-.scrap-kind {
-  color: var(--red);
-  font-size: 0.64rem;
-}
-.scrap-title {
-  font-size: 1.7rem;
-  line-height: 1.02;
-}
-.scrap-meta {
-  font-size: 0.9rem;
-  color: var(--ink-soft);
-}
-.scrap-note {
-  margin-top: 0.4rem;
-  font-family: var(--font-playfair), serif;
-  font-style: italic;
-  font-size: 1.05rem;
-  line-height: 1.35;
-}
-.scrap-sample {
-  position: absolute;
-  top: 0.55rem;
-  right: 0.7rem;
-  font-size: 0.55rem;
-  color: var(--ink-soft);
-  opacity: 0.8;
-}
-/* Books: a sheet torn from a notebook, taped on. */
-.scrap-book {
-  background: var(--paper-deep);
-  padding-top: 1.9rem;
-  clip-path: polygon(0 1.1%, 6% 0, 14% 1%, 25% 0.2%, 38% 1.2%, 51% 0, 66% 1%, 80% 0.2%, 92% 1.2%, 100% 0, 100% 100%, 0 100%);
-}
-.scrap-book::before,
-.scrap-movie::before,
-.scrap-trip::before {
-  content: "";
-  position: absolute;
-  top: -0.5rem;
-  left: 38%;
-  width: 4.5rem;
-  height: 1.3rem;
-  background: var(--taupe);
-  opacity: 0.8;
-  transform: rotate(-4deg);
-  z-index: 1;
-}
-/* Films: a ticket stub. */
-.scrap-movie {
+.cz-turn:hover:not(:disabled) {
   background: var(--ink);
   color: var(--paper);
-  border-left: 0.5rem dotted var(--taupe);
 }
-.scrap-movie .scrap-meta,
-.scrap-movie .scrap-sample {
-  color: var(--taupe);
+.cz-turn:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
-.scrap-movie .scrap-kind {
-  color: var(--taupe);
-}
-/* Trips: a polaroid. */
-.scrap-trip {
-  background: var(--paper);
-  padding: 0.8rem 0.8rem 1.3rem;
-  gap: 0.35rem;
-}
-.scrap-photo {
+
+/* ---------- Currently: scrapbook collage ---------- */
+.collage {
+  --u: 1cqw;
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 16 / 11;
   width: 100%;
-  height: auto;
-  margin-bottom: 0.6rem;
+}
+.cz-sheet {
+  position: absolute;
+  box-shadow: 0 18px 30px -22px rgba(46, 36, 29, 0.55);
+}
+/* Torn kraft sheet behind the hero piece. */
+.cz-sheet-torn {
+  left: 17%;
+  top: 2%;
+  width: 66%;
+  height: 76%;
+  background: color-mix(in srgb, var(--taupe) 55%, var(--paper));
+  clip-path: polygon(0 4%, 5% 0, 12% 3%, 24% 0, 38% 3%, 52% 0, 66% 3%, 80% 0, 93% 3%, 100% 0, 99% 30%, 100% 55%, 98% 80%, 100% 100%, 85% 97%, 70% 100%, 52% 97%, 36% 100%, 20% 97%, 6% 100%, 0 96%, 2% 70%, 0 45%, 2% 20%);
+  transform: rotate(-1deg);
+}
+/* Graph paper tucked under the lower left. */
+.cz-sheet-grid {
+  left: 0;
+  top: 40%;
+  width: 40%;
+  height: 56%;
+  background-color: var(--paper);
+  background-image: linear-gradient(color-mix(in srgb, var(--taupe) 60%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--taupe) 60%, transparent) 1px, transparent 1px);
+  background-size: 1.6cqw 1.6cqw;
+  transform: rotate(2deg);
+}
+.cz-piece {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  transform: rotate(var(--r, 0deg));
+  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1), box-shadow 0.35s;
+  box-shadow: 0 16px 24px -16px rgba(46, 36, 29, 0.6);
+  overflow: hidden;
+}
+a.cz-piece:hover,
+a.cz-piece:focus-visible {
+  transform: rotate(0deg) scale(1.04);
+  z-index: 20 !important;
+}
+.cz-text {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 0.3);
+  min-height: 0;
+}
+.cz-kind {
+  font-size: calc(var(--u) * 0.62 * var(--s, 1));
+  color: var(--red);
+}
+.cz-title {
+  font-size: calc(var(--u) * 1.75 * var(--s, 1));
+  line-height: 1.02;
+}
+.cz-meta {
+  font-size: calc(var(--u) * 1.05 * var(--s, 1));
+  color: var(--ink-soft);
+}
+.cz-note-text {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  font-size: calc(var(--u) * 1.2 * var(--s, 1));
+  line-height: 1.3;
+}
+.cz-photo {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: block;
+}
+/* Polaroid: photo with a taped white frame and caption strip. */
+.cz-polaroid {
+  background: #fffdf8;
+  padding: calc(var(--u) * 0.9) calc(var(--u) * 0.9) calc(var(--u) * 0.6);
+  gap: calc(var(--u) * 0.6);
+  overflow: visible;
+}
+.cz-polaroid .cz-photo img {
   filter: sepia(0.15) saturate(0.95);
 }
-.scrap-trip .scrap-kind,
-.scrap-trip .scrap-title,
-.scrap-trip .scrap-meta,
-.scrap-trip .scrap-note {
-  padding-inline: 0.4rem;
+.cz-polaroid::before,
+.cz-note::before,
+.cz-ticket::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--u) * -0.9);
+  left: 38%;
+  width: calc(var(--u) * 7);
+  height: calc(var(--u) * 2);
+  background: var(--taupe);
+  opacity: 0.85;
+  transform: rotate(-4deg);
+  z-index: 2;
 }
-/* Movement: a round sticker. */
-.scrap-movement {
+/* Torn note. */
+.cz-note {
+  background: var(--paper-deep);
+  padding: calc(var(--u) * 2.2) calc(var(--u) * 1.6) calc(var(--u) * 1.4);
+  overflow: visible;
+  justify-content: center;
+  clip-path: polygon(0 2%, 8% 0, 20% 2%, 34% 0, 50% 2%, 66% 0, 80% 2%, 92% 0, 100% 2%, 100% 100%, 0 100%);
+  box-shadow: none;
+  filter: drop-shadow(0 12px 12px rgba(46, 36, 29, 0.22));
+}
+.cz-note::before {
+  display: none;
+}
+/* Ticket stub. */
+.cz-ticket {
+  background: var(--ink);
+  color: var(--paper);
+  padding: calc(var(--u) * 1.6);
+  border-left: calc(var(--u) * 0.7) dotted var(--taupe);
+  overflow: visible;
+  justify-content: center;
+}
+.cz-ticket .cz-meta,
+.cz-ticket .cz-kind {
+  color: var(--taupe);
+}
+.cz-ticket::before {
+  display: none;
+}
+/* Die-cut sticker: picture with a thick white outline, like a cutout. */
+.cz-sticker {
+  background: #fffdf8;
+  padding: calc(var(--u) * 0.7);
+  border-radius: 14%;
+  gap: calc(var(--u) * 0.5);
+}
+.cz-sticker .cz-title {
+  font-size: calc(var(--u) * 1.3);
+}
+.cz-sticker .cz-photo {
+  border-radius: 10%;
+  overflow: hidden;
+}
+/* Badge: round rust sticker with a stitched edge. */
+.cz-badge {
   background: var(--red);
   color: var(--paper);
-  width: 11.5rem;
-  aspect-ratio: 1;
   border-radius: 50%;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 1.4rem;
-  margin-inline: auto;
+  padding: calc(var(--u) * 1.4);
   outline: 2px dashed var(--paper);
-  outline-offset: -0.7rem;
+  outline-offset: calc(var(--u) * -0.7);
 }
-.scrap-movement .scrap-kind,
-.scrap-movement .scrap-meta,
-.scrap-movement .scrap-sample {
+.cz-badge .cz-kind,
+.cz-badge .cz-meta {
   color: var(--paper);
 }
-.scrap-movement .scrap-title {
-  font-size: 1.35rem;
+.cz-badge .cz-text {
+  align-items: center;
 }
-.scrap-movement .scrap-sample {
-  top: 0.9rem;
-  right: auto;
+.cz-badge .cz-title {
+  font-size: calc(var(--u) * 1.35);
 }
 
-/* ---------- Studio: newspaper ---------- */
-.paper-cols {
+/* Assembly: backing paper first, then each piece drops on in turn. */
+.collage[data-armed="true"]:not([data-in="true"]) .cz-sheet,
+.collage[data-armed="true"]:not([data-in="true"]) .cz-piece {
+  opacity: 0;
+}
+.collage[data-in="true"] .cz-sheet {
+  animation: lay 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+.collage[data-in="true"] .cz-sheet-grid {
+  animation-delay: 0.2s;
+}
+.collage[data-in="true"] .cz-piece {
+  animation: drop 0.75s calc(0.45s + var(--i, 0) * 0.22s) cubic-bezier(0.2, 1.35, 0.4, 1) both;
+}
+@keyframes lay {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+}
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) rotate(calc(var(--r, 0deg) + 9deg)) scale(1.18);
+  }
+}
+
+@media (max-width: 719px) {
+  /* On phones the collage becomes a two-column pile with the same tilts. */
+  .collage {
+    --u: 0.62rem;
+    container-type: normal;
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.6rem 1rem;
+    overflow-x: clip; /* tilted pieces and tape must not widen the page */
+  }
+  .cz-sheet {
+    display: none;
+  }
+  .cz-piece {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    min-width: 0;
+    min-height: 11rem;
+    aspect-ratio: auto !important;
+    --s: 1 !important;
+  }
+  .cz-photo {
+    flex: none;
+    aspect-ratio: 4 / 3;
+  }
+  .cz-piece:first-of-type {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Studio: vintage newspaper ---------- */
+.gazette {
+  position: relative;
+  padding: clamp(1.2rem, 3vw, 2.6rem);
+  border-radius: 1.4rem;
+  color: #2a1f17;
+  /* Crumpled kraft paper: lit turbulence multiplied over a warm taupe, plus fine grain
+     and a darker edge, so it reads as an old folded sheet. Colours stay in our palette. */
+  background-color: color-mix(in srgb, var(--taupe) 60%, var(--paper-deep));
+  background-image: radial-gradient(ellipse at center, transparent 55%, rgba(110, 70, 36, 0.3) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.017' numOctaves='4' seed='7' result='n'/%3E%3CfeDiffuseLighting in='n' lighting-color='%23ffe9c9' surfaceScale='2.6'%3E%3CfeDistantLight azimuth='40' elevation='58'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.16 0 0 0 0 0.08 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-blend-mode: normal, multiply, normal;
+  box-shadow: 0 26px 50px -30px rgba(46, 36, 29, 0.7), inset 0 0 0 1px rgba(46, 36, 29, 0.12);
+}
+.gz-masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: center;
+  padding-bottom: 1.6rem;
+  border-bottom: 4px double #2a1f17;
+}
+.gz-dateline {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #2a1f17;
+  font-size: 0.62rem;
+}
+.gz-title {
+  font-size: clamp(3.4rem, 11vw, 8.5rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  color: #2a1f17;
+}
+.gz-motto {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  font-size: 1.05rem;
+}
+.gz-ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  color: #2a1f17;
+}
+.gz-ornament i {
+  flex: 1;
+  height: 0;
+  border-top: 1px solid #2a1f17;
+  border-bottom: 1px solid #2a1f17;
+  padding-top: 2px;
+}
+.gz-ornament b {
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+.gz-cols {
   column-count: 1;
-  column-gap: 2.75rem;
-  column-rule: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
-  border-top: 4px double var(--ink);
-  padding-top: 2rem;
+  column-gap: 2.4rem;
+  column-rule: 1px solid #2a1f17;
+  padding-top: 1.6rem;
 }
 @media (min-width: 640px) {
-  .paper-cols {
+  .gz-cols {
     column-count: 2;
   }
 }
 @media (min-width: 1024px) {
-  .paper-cols {
+  .gz-cols {
     column-count: 3;
   }
 }
-.paper-item {
+.gz-story {
   break-inside: avoid;
-  padding-bottom: 1.75rem;
-  margin-bottom: 1.75rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  margin-bottom: 1.8rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid rgba(42, 31, 23, 0.55);
   animation: rise 0.7s both cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.paper-link {
+.gz-link {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.7rem;
   width: 100%;
   text-align: left;
   cursor: pointer;
 }
-.paper-frame {
+.gz-kicker {
+  text-align: center;
+  font-size: 0.62rem;
+  color: var(--red-deep);
+}
+.gz-headline {
+  text-align: center;
+  font-size: 1.7rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.gz-photo {
   position: relative;
   display: block;
+  padding: 0.35rem;
+  border: 1px solid #2a1f17;
+  background: rgba(255, 253, 248, 0.35);
   overflow: hidden;
 }
-/* Newsprint: pictures are grey and slightly high-contrast until you hover them. */
-.paper-img {
+/* Old-print photograph: sepia and grainy until hovered, then true colour. */
+.gz-photo img {
+  display: block;
   width: 100%;
   height: auto;
-  filter: grayscale(1) contrast(1.08);
-  transition: filter 0.45s, transform 0.6s;
+  filter: sepia(0.85) contrast(1.08) saturate(0.7);
+  mix-blend-mode: multiply;
+  transition: filter 0.5s, transform 0.7s, mix-blend-mode 0.5s;
 }
-.paper-link:hover .paper-img,
-.paper-link:focus-visible .paper-img {
+.gz-link:hover .gz-photo img,
+.gz-link:focus-visible .gz-photo img {
   filter: none;
-  transform: scale(1.04);
+  mix-blend-mode: normal;
+  transform: scale(1.03);
 }
-.paper-kicker {
-  color: var(--red);
-  font-size: 0.64rem;
+.gz-caption {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  text-align: center;
 }
-.paper-headline {
-  font-size: 1.6rem;
-  line-height: 1.05;
-}
-.paper-headline-lg {
-  font-size: 2.1rem;
-  line-height: 1;
-  text-transform: uppercase;
-}
-.paper-dek {
+.gz-text {
+  font-family: var(--font-playfair), serif;
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--ink-soft);
+  text-align: justify;
+  hyphens: auto;
 }
-/* The "what a click does" cue that appears on hover and keyboard focus. */
-.paper-cue {
-  display: inline-flex;
-  align-self: flex-start;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--red);
-  border-bottom: 1px solid transparent;
-  opacity: 0.0;
+.gz-text::first-letter {
+  float: left;
+  font-weight: 700;
+  font-size: 3.1em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+}
+/* What a click does, shown on hover and keyboard focus. */
+.gz-cue {
+  align-self: center;
+  color: var(--red-deep);
+  border: 1px solid currentColor;
+  padding: 0.3rem 0.8rem;
+  opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.3s, transform 0.3s;
 }
-.paper-frame .paper-cue {
+.gz-photo .gz-cue {
   position: absolute;
-  right: 0.7rem;
-  bottom: 0.7rem;
+  right: 0.8rem;
+  bottom: 0.8rem;
   background: var(--paper);
-  padding: 0.45rem 0.8rem;
-  border-radius: 999px;
 }
-.paper-link:hover .paper-cue,
-.paper-link:focus-visible .paper-cue {
+.gz-link:hover .gz-cue,
+.gz-link:focus-visible .gz-cue {
   opacity: 1;
   transform: none;
 }
 @media (hover: none) {
-  /* No hover on touch screens, so the cue is always shown there. */
-  .paper-cue {
+  .gz-cue {
     opacity: 1;
     transform: none;
   }

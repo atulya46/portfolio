@@ -1,4 +1,4 @@
-// "Who I am": the About reference rebuilt in the site's own palette and type. A huge
+// About: the "Who I am" reference rebuilt in the site's own palette and type. A huge
 // tone-on-tone title, a solid text block under it, and a cutout of me overlapping the title.
 // The cutout is a sample; replace public/about/cutout-sample.svg (or change the path below).
 const CUTOUT = "/about/cutout-sample.svg";
@@ -14,7 +14,7 @@ const loves = [
 export function AboutRedesign() {
   return (
     <main className="about-stage">
-      <h1 className="display about-title">Who I am</h1>
+      <h1 className="display about-title">About</h1>
 
       <div className="about-box">
         <p>
