@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 /*
-  Visual identity (milestone 3). Drawn from the reference portfolios:
-  - poster red on cream paper, a chunky display face and typewriter text (Pai Villamayor)
-  - the artwork itself as the hero, with type layered against it (FoliBlox)
-  - tape, paper and hand-drawn circles, used sparingly (Zuleyha Oner)
-  - a vertical word in a second script and a ticker of what's going on (Tenztan)
+  Visual identity, from the "Warm Editorial" style guide (Canva):
+  rust hero, ivory pages, deep-brown text; Playfair Display for headings,
+  Inter for everything else, set in small uppercase with wide spacing.
+  Token names (red, paper, ink...) are kept from the first pass so components
+  didn't need renaming; the values are the guide's.
 */
 :root {
-  --paper: #f6ecdd;
-  --paper-deep: #ecdcc5;
-  --ink: #1f1512;
-  --ink-soft: #6a5448;
-  --red: #e0392a;
-  --red-deep: #a8261b;
-  --marigold: #f0a236;
-  --tape: rgba(240, 162, 54, 0.55);
+  --paper: #f7f1e8; /* ivory: page background */
+  --paper-deep: #e8ded3; /* sand: surfaces and cards */
+  --ink: #2e241d; /* deep brown: text and headings */
+  --ink-soft: #6f655b; /* stone, darkened a step so small text passes contrast on ivory */
+  --stone: #a7a097; /* the guide's stone: hairlines and decoration */
+  --taupe: #c9b6a2; /* warm taupe: accents */
+  --red: #8b3a2e; /* rust: hero background and primary button */
+  --red-deep: #6f2c22; /* rust, one step darker for hover and links on ivory */
 }
 
 @theme inline {
@@ -23,12 +23,12 @@
   --color-paper-deep: var(--paper-deep);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
+  --color-stone: var(--stone);
+  --color-taupe: var(--taupe);
   --color-red: var(--red);
   --color-red-deep: var(--red-deep);
-  --color-marigold: var(--marigold);
-  --font-display: var(--font-rozha);
-  --font-sans: var(--font-hanken);
-  --font-mono: var(--font-space-mono);
+  --font-display: var(--font-playfair);
+  --font-sans: var(--font-inter);
 }
 
 html {
@@ -38,9 +38,7 @@ html {
 body {
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-hanken), system-ui, sans-serif;
-  /* A faint paper grain so the cream reads as a surface, not a hex code. */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.2 0 0 0 0 0.1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 ::selection {
@@ -53,129 +51,122 @@ body {
   outline-offset: 3px;
 }
 
-/* Small uppercase typewriter labels: the site's "meta" voice. */
+/* Navigation, labels, buttons and taglines: small, uppercase, wide-spaced (the guide's body style). */
 .label {
-  font-family: var(--font-space-mono), ui-monospace, monospace;
   font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
 .display {
-  font-family: var(--font-rozha), Georgia, serif;
-  font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: -0.01em;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
-/* ---------- hand-drawn circle (Zuleyha's marker circles) ---------- */
-.scribble {
-  position: relative;
-  display: inline-block;
+/* ---------- buttons (guide: primary filled rust, secondary outlined) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid currentColor;
+  transition: background-color 0.25s, color 0.25s;
 }
-.scribble > svg {
-  position: absolute;
-  inset: -22% -14%;
-  width: 128%;
-  height: 144%;
-  pointer-events: none;
-  overflow: visible;
-}
-.scribble > svg path {
-  fill: none;
-  stroke: var(--red);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-dasharray: 420;
-  stroke-dashoffset: 420;
-  transition: stroke-dashoffset 0.55s cubic-bezier(0.6, 0, 0.3, 1);
-}
-.scribble[data-on="true"] > svg path,
-a:hover .scribble > svg path,
-a:focus-visible .scribble > svg path {
-  stroke-dashoffset: 0;
-}
-
-/* ---------- homepage hero ---------- */
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) auto;
-  min-height: min(86vh, 860px);
-}
-.hero-art {
-  position: relative;
-  margin: 0;
-  /* The painting bleeds off the left edge and is cut on a slant, like Pai's illustration. */
-  clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
-  background: var(--ink);
-}
-.hero-copy {
-  display: flex;
+.btn-circle {
+  width: 5.2rem;
+  aspect-ratio: 1;
   flex-direction: column;
   justify-content: center;
-  gap: 1.6rem;
-  padding: 3rem 1rem 3rem clamp(1.5rem, 4vw, 4rem);
-  position: relative;
-  z-index: 1;
+  gap: 0.25rem;
+  padding: 0;
+  text-align: center;
 }
-.hero-name {
-  font-size: clamp(4.5rem, 10.5vw, 10rem);
+.btn-primary {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--paper);
+}
+.btn-primary:hover {
+  background: var(--red-deep);
+}
+.btn-ghost:hover {
+  background: var(--paper);
   color: var(--red);
-  display: flex;
-  flex-direction: column;
 }
-.hero-name span:last-child {
-  padding-left: 0.9em;
+
+/* ---------- link underline that draws in on hover; thicker when current ---------- */
+.scribble {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  padding-bottom: 0.15em;
+  transition: background-size 0.4s cubic-bezier(0.6, 0, 0.3, 1);
 }
-.hero-vertical {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  padding: 2.2rem 1.6rem 0 0.5rem;
+.scribble[data-on="true"],
+a:hover .scribble,
+a:focus-visible .scribble {
+  background-size: 100% 1px;
 }
-.hero-vertical .deva {
+
+/* ---------- homepage hero (laptop-screen reference in the guide) ---------- */
+.hero-shell {
+  margin-top: -1px; /* hides a hairline between the header and hero backgrounds */
+  background: var(--red);
+  color: var(--paper);
+}
+.hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: var(--font-rozha), serif;
-  font-size: clamp(2.4rem, 4vw, 4rem);
-  line-height: 1.05;
-  color: var(--ink);
+  text-align: center;
+  gap: 1.6rem;
+  padding: 1rem 1.25rem 3.5rem;
+  min-height: min(82vh, 820px);
+  justify-content: center;
 }
-.hero-vertical .label {
-  writing-mode: vertical-rl;
-  color: var(--ink-soft);
-  border-left: 1px solid var(--ink-soft);
-  padding-left: 0.5rem;
+/* The circle holds a looping image. The name sits in front and overlaps its lower edge, as in the guide. */
+.hero-circle {
+  position: relative;
+  width: clamp(220px, 28vw, 330px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid var(--paper);
+  overflow: hidden;
+  margin-bottom: calc(clamp(220px, 28vw, 330px) * -0.2);
+}
+.hero-circle img {
+  object-fit: cover;
+  object-position: 50% 25%;
+  animation: drift 24s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.14) translateY(-3%);
+  }
+}
+.hero-name {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(3.3rem, 11.5vw, 10.5rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 28px rgba(46, 36, 29, 0.35);
+}
+.hero-tagline {
+  max-width: 34rem;
+  line-height: 2;
 }
 
-@media (max-width: 860px) {
-  .hero {
-    grid-template-columns: 1fr;
-    min-height: 0;
-  }
-  .hero-art {
-    aspect-ratio: 4 / 4.4;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 90%);
-  }
-  .hero-copy {
-    margin: 0.5rem 0 0;
-    padding: 0 1.25rem 2.5rem;
-  }
-  .hero-kicker {
-    order: 3;
-  }
-  .hero-caption {
-    top: 1rem;
-    bottom: auto;
-  }
-  .hero-vertical {
-    display: none;
-  }
-}
-
-/* ---------- ticker (Tenztan's marquee) ---------- */
+/* ---------- ticker ---------- */
 .ticker {
   overflow: hidden;
   background: var(--ink);
@@ -195,46 +186,21 @@ a:focus-visible .scribble > svg path {
   }
 }
 
-/* ---------- tape and paper (Zuleyha) ---------- */
+/* ---------- surfaces ---------- */
 .taped {
   position: relative;
-  background: #fffaf1;
-  box-shadow: 0 1px 0 rgba(31, 21, 18, 0.08), 0 18px 34px -22px rgba(31, 21, 18, 0.55);
-}
-.taped::before,
-.taped::after {
-  content: "";
-  position: absolute;
-  width: 92px;
-  height: 26px;
-  background: var(--tape);
-  mix-blend-mode: multiply;
-}
-.taped::before {
-  top: -12px;
-  left: 46%;
-  transform: rotate(-5deg);
-}
-.taped::after {
-  bottom: -10px;
-  right: 22px;
-  transform: rotate(-4deg);
+  background: var(--paper-deep);
 }
 
-/* ---------- pill tags with a spark (Pai) ---------- */
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  border: 1.5px solid var(--ink);
+  border: 1px solid var(--ink);
   border-radius: 999px;
-  padding: 0.3rem 0.85rem;
-  font-family: var(--font-space-mono), monospace;
-  font-size: 0.8rem;
-}
-.pill::before {
-  content: "\2726";
-  color: var(--red);
+  padding: 0.3rem 0.9rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 /* ---------- Markdown bodies of entries ---------- */
@@ -242,20 +208,13 @@ a:focus-visible .scribble > svg path {
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
-  font-size: 1.15rem;
-  line-height: 1.75;
+  font-size: 1.1rem;
+  line-height: 1.8;
   max-width: 64ch;
 }
-.entry-body > p:first-child::first-letter {
-  float: left;
-  font-family: var(--font-rozha), serif;
-  font-size: 4.2em;
-  line-height: 0.8;
-  padding: 0.08em 0.1em 0 0;
-  color: var(--red);
-}
 .entry-body h2 {
-  font-family: var(--font-rozha), serif;
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
   font-size: 2rem;
   line-height: 1.1;
   margin-top: 1rem;
@@ -266,17 +225,14 @@ a:focus-visible .scribble > svg path {
   text-underline-offset: 3px;
 }
 .entry-body blockquote {
-  border-left: 3px solid var(--red);
+  border-left: 2px solid var(--red);
   padding-left: 1rem;
+  font-family: var(--font-playfair), serif;
   font-style: italic;
 }
 .entry-body ul {
-  list-style: none;
-  padding-left: 0;
-}
-.entry-body ul li::before {
-  content: "\2726  ";
-  color: var(--red);
+  list-style: disc;
+  padding-left: 1.4rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

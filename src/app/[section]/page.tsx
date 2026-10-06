@@ -27,16 +27,16 @@ export default async function SectionPage({ params }: PageProps<"/[section]">) {
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-12 px-5 pb-24 pt-10 sm:px-8">
-      <header className="flex flex-col gap-5 border-b-[3px] border-ink pb-8">
+      <header className="flex flex-col gap-5 border-b border-ink/30 pb-8">
         <span className="label text-ink-soft">
           {section.side === "day" ? "By day" : "By evening"} · {countLabel(entries.length)}
         </span>
         <h1 className="display text-[clamp(4rem,12vw,9rem)] text-red">{section.title}</h1>
-        <p className="max-w-xl font-mono text-ink-soft">{section.blurb}.</p>
+        <p className="max-w-xl text-ink-soft">{section.blurb}.</p>
       </header>
 
       {entries.length === 0 ? (
-        <div className="taped mx-auto mt-6 w-full max-w-md -rotate-2 px-8 py-10 text-center">
+        <div className="taped mx-auto mt-6 w-full max-w-md px-8 py-10 text-center">
           <p className="display text-3xl">{section.emptyNote}</p>
           <p className="label mt-4 text-ink-soft">Nothing here yet</p>
         </div>

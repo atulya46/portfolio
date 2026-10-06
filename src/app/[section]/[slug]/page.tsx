@@ -34,13 +34,13 @@ export default async function EntryPage({ params }: PageProps<"/[section]/[slug]
       </Link>
 
       {/* Title block with the entry's number set large, like a project sheet. */}
-      <header className="grid items-end gap-6 border-b-[3px] border-ink pb-8 md:grid-cols-[1fr_auto]">
+      <header className="grid items-end gap-6 border-b border-ink/30 pb-8 md:grid-cols-[1fr_auto]">
         <div className="flex flex-col gap-4">
           <span className="label text-ink-soft">
             {typeLabel(entry)} · {formatDate(entry.date)}
           </span>
           <h1 className="display text-[clamp(3.2rem,8vw,6.5rem)] text-red">{entry.title}</h1>
-          {sub && entry.type !== "painting" && <p className="font-mono text-ink-soft">{sub}</p>}
+          {sub && entry.type !== "painting" && <p className="text-ink-soft">{sub}</p>}
           {entry.type === "learning" && entry.topics.length > 0 && (
             <ul className="flex flex-wrap gap-2 pt-1">
               {entry.topics.map((t) => (
@@ -51,14 +51,14 @@ export default async function EntryPage({ params }: PageProps<"/[section]/[slug]
             </ul>
           )}
         </div>
-        <span aria-hidden="true" className="display hidden text-[9rem] leading-none md:block">
+        <span aria-hidden="true" className="display hidden text-[9rem] leading-none text-taupe md:block">
           {number}.
         </span>
       </header>
 
       {entry.type === "painting" && (
         <figure className="flex flex-col items-center gap-5">
-          <div className="bg-[#fffaf1] p-3 shadow-[0_30px_60px_-30px_rgba(31,21,18,.65)] sm:p-5">
+          <div className="bg-paper-deep p-3  sm:p-5">
             <Image
               src={entry.image}
               alt={entry.alt}
@@ -82,7 +82,7 @@ export default async function EntryPage({ params }: PageProps<"/[section]/[slug]
           {entry.quotes.map((q, i) => (
             <figure
               key={q}
-              className={`taped max-w-3xl px-7 pb-8 pt-12 sm:px-12 ${i % 2 === 0 ? "-rotate-1" : "rotate-1 self-end"}`}
+              className={`taped max-w-3xl px-7 pb-8 pt-12 sm:px-12 ${i % 2 === 0 ? "" : "self-end"}`}
             >
               <span aria-hidden className="display absolute -top-3 left-5 text-[6rem] leading-none text-red">
                 &ldquo;

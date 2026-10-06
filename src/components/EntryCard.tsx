@@ -43,7 +43,7 @@ export function EntryCard({ entry, number }: { entry: Entry; number: number }) {
   if (entry.type === "painting") {
     return (
       <Link href={href} className="group flex flex-col gap-4">
-        <div className="bg-[#fffaf1] p-3 shadow-[0_22px_40px_-24px_rgba(31,21,18,.6)] transition-transform duration-500 group-hover:-rotate-1 sm:p-4">
+        <div className="bg-paper-deep p-3  transition-transform duration-500sm:p-4">
           <Image
             src={entry.image}
             alt={entry.alt}
@@ -71,7 +71,7 @@ export function EntryCard({ entry, number }: { entry: Entry; number: number }) {
         <span className="display text-4xl sm:text-5xl">
           <Scribble>{entry.title}</Scribble>
         </span>
-        {sub && <span className="font-mono text-sm text-ink-soft">{sub}</span>}
+        {sub && <span className="text-sm text-ink-soft">{sub}</span>}
         {entry.type === "book" && entry.quotes[0] && (
           <span className="mt-2 max-w-xl text-lg italic text-ink-soft">&ldquo;{entry.quotes[0]}&rdquo;</span>
         )}

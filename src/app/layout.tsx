@@ -1,26 +1,17 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, Rozha_One, Space_Mono } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
-// Rozha One: a heavy display face that also covers Devanagari, used for the
-// name, headings and the vertical "संतुलन" on the homepage.
-const rozha = Rozha_One({
-  variable: "--font-rozha",
-  weight: "400",
-  subsets: ["latin", "devanagari"],
-});
-
-// Hanken Grotesk for reading; Space Mono as the typewriter "meta" voice.
-const hanken = Hanken_Grotesk({
-  variable: "--font-hanken",
+// Playfair Display for headings and the name; Inter for everything else (the style guide's pairing).
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
-const spaceMono = Space_Mono({
-  variable: "--font-space-mono",
-  weight: ["400", "700"],
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -31,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${rozha.variable} ${hanken.variable} ${spaceMono.variable} h-full antialiased`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <SiteHeader />
         {children}

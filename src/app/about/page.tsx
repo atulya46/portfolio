@@ -15,7 +15,7 @@ const loves = [
 export default function AboutPage() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-14 px-5 pb-24 pt-10 sm:px-8">
-      <header className="flex flex-col gap-5 border-b-[3px] border-ink pb-8">
+      <header className="flex flex-col gap-5 border-b border-ink/30 pb-8">
         <span className="label text-ink-soft">Hello!</span>
         <h1 className="display text-[clamp(4rem,12vw,9rem)] text-red">About</h1>
       </header>
@@ -34,9 +34,9 @@ export default function AboutPage() {
             This site is my portfolio and my logbook: what I read, paint, learn and think, updated about once a week.
           </p>
         </div>
-        <aside className="taped -rotate-1 self-start px-7 pb-8 pt-10">
+        <aside className="taped self-start px-7 pb-8 pt-10">
           <h2 className="label text-ink-soft">Things I love talking about</h2>
-          <ul className="mt-4 flex flex-col gap-3 font-mono text-sm">
+          <ul className="mt-4 flex flex-col gap-3 text-sm">
             {loves.map((item) => (
               <li key={item} className="pill w-fit">
                 {item}
