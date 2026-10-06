@@ -32,7 +32,7 @@ export default function Home() {
                 className="object-cover object-top"
               />
               <figcaption className="hero-caption label absolute bottom-5 left-5 text-paper">
-                <Link href={`/canvas/${painting.slug}`} className="hover:underline">
+                <Link href={`/${painting.section}/${painting.slug}`} className="hover:underline">
                   No. {padNumber(entryNumber(painting, entries))} · {painting.title}{painting.medium ? ` · ${painting.medium}` : ""}
                 </Link>
               </figcaption>

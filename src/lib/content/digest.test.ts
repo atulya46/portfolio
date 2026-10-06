@@ -16,9 +16,9 @@ const newestFirst = [newBook, doneCourse, course, painting, oldBook];
 describe("nowLines", () => {
   it("shows the newest book, the current course and the last painting", () => {
     expect(nowLines(newestFirst)).toEqual([
-      { verb: "Reading", title: "New", href: "/leisure/new" },
-      { verb: "Learning", title: "RAG", href: "/learning/c" },
-      { verb: "Last painted", title: "Red", href: "/canvas/p" },
+      { verb: "Reading", title: "New", href: "/currently/new" },
+      { verb: "Learning", title: "RAG", href: "/projects/c" },
+      { verb: "Last painted", title: "Red", href: "/studio/p" },
     ]);
   });
 

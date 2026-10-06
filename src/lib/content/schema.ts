@@ -82,14 +82,14 @@ export type EntryType = Frontmatter["type"];
 
 // Which section page each entry type appears on.
 export const sectionForType: Record<EntryType, string> = {
-  book: "leisure",
-  movie: "leisure",
-  trip: "leisure",
-  painting: "canvas",
-  learning: "learning",
-  project: "work",
-  thought: "thoughts",
-  movement: "movement",
+  book: "currently",
+  movie: "currently",
+  trip: "currently",
+  movement: "currently",
+  painting: "studio",
+  thought: "studio",
+  learning: "projects",
+  project: "projects",
 };
 
 export type Entry = Frontmatter & {

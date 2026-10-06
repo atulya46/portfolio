@@ -10,7 +10,7 @@ describe("parseEntry", () => {
       "books/some-book.md",
       "---\ntype: book\ntitle: Some Book\nauthor: Someone\ndate: 2026-09-28\nquotes: [\"a line\"]\n---\n",
     );
-    expect(entry).toMatchObject({ type: "book", slug: "some-book", section: "leisure", quotes: ["a line"] });
+    expect(entry).toMatchObject({ type: "book", slug: "some-book", section: "currently", quotes: ["a line"] });
     expect(entry.html).toBe("");
   });
 

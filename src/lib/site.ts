@@ -19,15 +19,16 @@ export const site = {
   tagline: "Engineer by day, painter by evening, curious all the time.",
 };
 
+// Four content sections hold entries. "About" is a standalone page (see `aboutPage`).
+// "Studio" is a working name for the art + thoughts section; renaming it is a one-line change here.
 export const sections: Section[] = [
-  { slug: "work", title: "Work", blurb: "Projects and career highlights", side: "day", emptyNote: "Shipping first, writing it up later." },
-  { slug: "ai", title: "AI", blurb: "What I'm building and thinking about in AI", side: "day", emptyNote: "Still training. Check back after a few more epochs." },
-  { slug: "learning", title: "Learning", blurb: "What I'm learning right now, and what stuck", side: "day", emptyNote: "Between courses. Suspiciously rare." },
-  { slug: "leisure", title: "Leisure", blurb: "Books, movies and travel", side: "evening", emptyNote: "Out living it. Notes to follow." },
-  { slug: "canvas", title: "Canvas", blurb: "Paintings, mostly acrylic", side: "evening", emptyNote: "The paint is still wet." },
-  { slug: "movement", title: "Movement", blurb: "Dance and fitness", side: "evening", emptyNote: "Currently stretching." },
-  { slug: "thoughts", title: "Thoughts", blurb: "Opinions and introspection", side: "evening", emptyNote: "Thinking about it. Literally." },
+  { slug: "work", title: "Work", blurb: "Career highlights and the things I do for a living", side: "day", emptyNote: "Shipping first, writing it up later." },
+  { slug: "projects", title: "Projects", blurb: "What I'm building and learning, AI included", side: "day", emptyNote: "Still training. Check back after a few more epochs." },
+  { slug: "currently", title: "Currently", blurb: "What I'm reading, watching, moving and exploring right now", side: "evening", emptyNote: "Out living it. Notes to follow." },
+  { slug: "studio", title: "Studio", blurb: "Paintings, and the opinions I paint over", side: "evening", emptyNote: "The paint is still wet." },
 ];
+
+export const aboutPage = { href: "/about", title: "About" };
 
 export function sectionHref(slug: string): string {
   return `/${slug}`;
