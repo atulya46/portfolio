@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { aboutPage, sectionHref, sections } from "@/lib/site";
+import { aboutPage, contact, sectionHref, sections } from "@/lib/site";
 import { Scribble } from "./Scribble";
 
 const links = [
@@ -40,6 +40,12 @@ export function SiteHeader() {
           <Scribble>Menu</Scribble>
         </Link>
       </nav>
+      <a
+        href={`mailto:${contact.email}`}
+        className="btn label hidden !px-5 !py-2.5 hover:bg-current/10 lg:inline-flex"
+      >
+        Get in touch <span aria-hidden>&rarr;</span>
+      </a>
     </header>
   );
 }

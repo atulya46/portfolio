@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatDate } from "./EntryCard";
 import { loadEntries } from "@/lib/content/load";
+import { contact } from "@/lib/site";
 
 export function SiteFooter() {
   const latest = loadEntries()[0];
@@ -12,6 +13,12 @@ export function SiteFooter() {
         <div className="label flex flex-col gap-2 leading-relaxed md:text-right">
           {latest && <span>Last entry · {formatDate(latest.date)}</span>}
           <span>Updated weekly-ish, painted daily-ish</span>
+          <a href={`mailto:${contact.email}`} className="normal-case underline underline-offset-4 hover:text-ink">
+            {contact.email}
+          </a>
+          <Link href={contact.linkedin} className="underline underline-offset-4 hover:text-ink">
+            LinkedIn
+          </Link>
           <Link href="https://github.com/atulya46/portfolio" className="underline underline-offset-4 hover:text-ink">
             Read the source on GitHub
           </Link>

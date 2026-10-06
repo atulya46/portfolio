@@ -37,3 +37,9 @@ export function sectionHref(slug: string): string {
 export function sectionsOn(side: Side): Section[] {
   return sections.filter((s) => s.side === side);
 }
+
+// Where "Get in touch" points. Supplied by Atulya for public display.
+export const contact = {
+  email: "atulya.arya64@gmail.com",
+  linkedin: "https://www.linkedin.com/in/atulya-arya",
+};
