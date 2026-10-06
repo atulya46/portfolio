@@ -14,8 +14,8 @@
   --ink-soft: #6f655b; /* stone, darkened a step so small text passes contrast on ivory */
   --stone: #a7a097; /* the guide's stone: hairlines and decoration */
   --taupe: #c9b6a2; /* warm taupe: accents */
-  --red: #7e3525; /* rust, as the guide image actually renders it (its label says #8B3A2E but the swatch and hero pixels are #7E3525) */
-  --red-deep: #652a1d; /* rust, one step darker for hover and links on ivory */
+  --red: #8b3a2e; /* rust, as labelled in the style guide (its image renders it slightly darker; Atulya chose the labelled values) */
+  --red-deep: #6f2c22; /* rust, one step darker for hover and links on ivory */
 }
 
 @theme inline {
