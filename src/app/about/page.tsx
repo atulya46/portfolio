@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { AboutRedesign } from "@/components/redesign/AboutRedesign";
 import { Scribble } from "@/components/Scribble";
+import { flags } from "@/lib/flags";
 
 export const metadata = { title: "About · Atulya Arya" };
 
@@ -13,6 +15,8 @@ const loves = [
 ];
 
 export default function AboutPage() {
+  if (flags.sectionRedesign) return <AboutRedesign />;
+
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-14 px-5 pb-24 pt-10 sm:px-8">
       <header className="flex flex-col gap-5 border-b border-ink/30 pb-8">

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { flags } from "@/lib/flags";
 import { aboutPage, contact, sectionHref, sections } from "@/lib/site";
 import { Scribble } from "./Scribble";
 
@@ -15,7 +16,7 @@ const links = [
 export function SiteHeader() {
   const pathname = usePathname();
   const current = pathname.split("/")[1];
-  const onHero = pathname === "/";
+  const onHero = pathname === "/" || (flags.sectionRedesign && pathname === "/about");
 
   return (
     <header

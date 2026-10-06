@@ -10,9 +10,16 @@ const base = {
   tags: z.array(z.string()).default([]),
 };
 
+// Optional picture for entries that can have one (a cover, a photo from the trip).
+const optionalImage = {
+  image: z.string().startsWith("/").optional(),
+  alt: z.string().optional(),
+};
+
 export const bookSchema = z.object({
   ...base,
   type: z.literal("book"),
+  ...optionalImage,
   author: z.string().min(1),
   status: z.enum(["reading", "finished", "abandoned"]).optional(),
   take: z.string().optional(),
@@ -42,6 +49,7 @@ export const learningSchema = z.object({
 export const movieSchema = z.object({
   ...base,
   type: z.literal("movie"),
+  ...optionalImage,
   director: z.string().optional(),
   year: z.number().int().optional(),
   take: z.string().optional(),
@@ -50,6 +58,7 @@ export const movieSchema = z.object({
 export const tripSchema = z.object({
   ...base,
   type: z.literal("trip"),
+  ...optionalImage,
   place: z.string().min(1),
   take: z.string().optional(),
 });
@@ -62,9 +71,15 @@ export const projectSchema = z.object({
   link: z.url().optional(),
 });
 
-export const thoughtSchema = z.object({ ...base, type: z.literal("thought") });
+// A thought can live on this site, or point out to where it was published (e.g. a Substack post).
+export const thoughtSchema = z.object({
+  ...base,
+  type: z.literal("thought"),
+  link: z.url().optional(),
+  outlet: z.string().optional(),
+});
 
-export const movementSchema = z.object({ ...base, type: z.literal("movement") });
+export const movementSchema = z.object({ ...base, type: z.literal("movement"), ...optionalImage });
 
 export const frontmatterSchema = z.discriminatedUnion("type", [
   bookSchema,

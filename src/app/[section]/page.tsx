@@ -1,4 +1,9 @@
 import { notFound } from "next/navigation";
+import { CurrentlyBoard } from "@/components/redesign/CurrentlyBoard";
+import { StudioPaper } from "@/components/redesign/StudioPaper";
+import { toPaperItems, toScraps } from "@/lib/content/board";
+import { samplePaperItems, sampleScraps } from "@/lib/content/samples";
+import { flags } from "@/lib/flags";
 import { EntryCard } from "@/components/EntryCard";
 import { countLabel, entryNumber } from "@/lib/content/digest";
 import { loadEntries } from "@/lib/content/load";
@@ -35,7 +40,12 @@ export default async function SectionPage({ params }: PageProps<"/[section]">) {
         <p className="max-w-xl text-ink-soft">{section.blurb}.</p>
       </header>
 
-      {entries.length === 0 ? (
+      {flags.sectionRedesign && slug === "currently" ? (
+        // Real entries first; samples fill the board until real ones and images are in.
+        <CurrentlyBoard items={[...toScraps(entries), ...sampleScraps]} />
+      ) : flags.sectionRedesign && slug === "studio" ? (
+        <StudioPaper items={[...toPaperItems(entries), ...samplePaperItems]} />
+      ) : entries.length === 0 ? (
         <div className="taped mx-auto mt-6 w-full max-w-md px-8 py-10 text-center">
           <p className="display text-3xl">{section.emptyNote}</p>
           <p className="label mt-4 text-ink-soft">Nothing here yet</p>
