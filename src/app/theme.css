@@ -1,0 +1,41 @@
+/*
+  THE COLOUR PALETTE. This is the only file that holds colours: to restyle the site, edit the values
+  below (nothing else needs to change). Components use these semantic names, never raw colours.
+
+    --background  page background          --foreground  main text
+    --accent      links, pills, highlights  --muted       secondary text
+    --surface     tiles and placeholders
+    --tag-*       Favourites type tags, one per Notion select colour (shown as soft tints)
+
+  Two themes: :root is light, [data-theme="dark"] is dark. The toggle in the menu bar and the
+  first-visit system preference both just set data-theme on <html>.
+*/
+:root {
+  color-scheme: light;
+  --background: #fbf4ea;
+  --foreground: #3b2a20;
+  --accent: #d9622b;
+  --muted: #8a6f5c;
+  --surface: #f3e6d5;
+  /* Warm takes on Notion's tag colours, used at low opacity behind the tag text. */
+  --tag-default: #a08a78;
+  --tag-gray: #9b8c80;
+  --tag-brown: #8a6f5c;
+  --tag-orange: #d9622b;
+  --tag-yellow: #c79a3a;
+  --tag-green: #6f8a5c;
+  --tag-blue: #5f7f96;
+  --tag-purple: #8a6a92;
+  --tag-pink: #c0697e;
+  --tag-red: #b5503f;
+}
+
+/* The same warm palette turned down: toasted browns with a brighter orange. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #1c1410;
+  --foreground: #f3e6d8;
+  --accent: #f08a4b;
+  --muted: #b89c86;
+  --surface: #2a1e17;
+}

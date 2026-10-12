@@ -17,6 +17,12 @@ export const bookSchema = z.object({
   status: z.enum(["reading", "finished", "abandoned"]).optional(),
   take: z.string().optional(),
   quotes: z.array(z.string()).default([]),
+  // Optional cover: a file under /public or an https image URL; without one the tile shows the title.
+  cover: z
+    .string()
+    .refine((v) => v.startsWith("/") || v.startsWith("https://"), "cover must start with / or https://")
+    .optional(),
+  coverAlt: z.string().optional(),
 });
 
 export const paintingSchema = z.object({
@@ -59,12 +65,32 @@ export const projectSchema = z.object({
   type: z.literal("project"),
   role: z.string().optional(),
   stack: z.array(z.string()).default([]),
+  // Live project, source code and write-up; each is optional and shown only when present.
   link: z.url().optional(),
+  source: z.url().optional(),
+  caseStudy: z.url().optional(),
+  // Position on the homepage: 1 shows first. Projects without one follow, newest first.
+  order: z.number().int().positive().optional(),
+  // Animated preview (GIF, or a still) under /public, described for screen readers.
+  media: z.string().startsWith("/").optional(),
+  mediaAlt: z.string().optional(),
 });
 
-export const thoughtSchema = z.object({ ...base, type: z.literal("thought") });
+export const thoughtSchema = z.object({
+  ...base,
+  type: z.literal("thought"),
+  // Optional: the POV contents page groups articles under their category.
+  category: z.string().optional(),
+});
 
-export const movementSchema = z.object({ ...base, type: z.literal("movement") });
+export const movementSchema = z.object({
+  ...base,
+  type: z.literal("movement"),
+  image: z.string().startsWith("/").optional(),
+  alt: z.string().optional(),
+  // Shown under the photo on the homepage; falls back to the title.
+  caption: z.string().optional(),
+});
 
 export const frontmatterSchema = z.discriminatedUnion("type", [
   bookSchema,
@@ -80,16 +106,16 @@ export const frontmatterSchema = z.discriminatedUnion("type", [
 export type Frontmatter = z.infer<typeof frontmatterSchema>;
 export type EntryType = Frontmatter["type"];
 
-// Which section page each entry type appears on.
+// Which home-page section each entry type appears in.
 export const sectionForType: Record<EntryType, string> = {
-  book: "leisure",
-  movie: "leisure",
-  trip: "leisure",
-  painting: "canvas",
-  learning: "learning",
-  project: "work",
-  thought: "thoughts",
-  movement: "movement",
+  book: "studio",
+  movie: "favourites",
+  trip: "favourites",
+  painting: "studio",
+  movement: "studio",
+  learning: "projects",
+  project: "projects",
+  thought: "pov",
 };
 
 export type Entry = Frontmatter & {

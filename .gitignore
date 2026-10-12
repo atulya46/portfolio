@@ -58,3 +58,17 @@ service-account*.json
 
 # ...except site content, which is markdown by design
 !content/**/*.md
+
+# local tooling and editor settings
+.claude/
+.vscode/
+.idea/
+
+# originals, mockups and scratch files that stay on this machine (the site's own images live in public/)
+*.heic
+*.HEIC
+*.tgz
+*.log
+/originals/
+/mockups/
+/scratch/

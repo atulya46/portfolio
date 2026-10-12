@@ -15,7 +15,7 @@ describe("sections", () => {
 });
 
 describe("sectionHref", () => {
-  it("builds a root-relative link", () => {
-    expect(sectionHref("canvas")).toBe("/canvas");
+  it("links to the section anchor on the home page", () => {
+    expect(sectionHref("studio")).toBe("/#studio");
   });
 });

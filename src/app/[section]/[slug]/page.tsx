@@ -26,18 +26,18 @@ export default async function EntryPage({ params }: PageProps<"/[section]/[slug]
   const sub = subtitle(entry);
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-6 py-16">
-      <Link href={`/${section}`} className="text-sm text-muted hover:text-accent">
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-6 py-16 md:py-24">
+      <Link href={`/#${section}`} className="text-sm text-muted transition-colors hover:text-accent">
         &larr; {sectionTitle}
       </Link>
 
       <header className="flex flex-col gap-2">
         <p className="text-xs uppercase tracking-widest text-muted">
-          {entry.type === "learning" && entry.status === "now" ? "On my desk right now" : entry.type}
+          {entry.type === "learning" && entry.status === "now" ? "On my desk right now" : sectionTitle}
           {" · "}
           {formatDate(entry.date)}
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight">{entry.title}</h1>
+        <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight md:text-5xl">{entry.title}</h1>
         {sub && entry.type !== "painting" && <p className="text-lg text-muted">{sub}</p>}
       </header>
 
